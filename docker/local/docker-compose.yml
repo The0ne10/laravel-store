@@ -85,7 +85,31 @@ services:
             - ./data/postgres:/var/lib/postgresql/data
             - ./logs/postgres:/var/log/postgresql/
         ports:
-            - "5433:5432"
+            - "5432:5432"
         restart: unless-stopped
         expose:
             - "5432"
+
+    postgres_test:
+        container_name: ${PROJECT_PREFIX}_postgres_test
+        build:
+            context: ./containers/postgres
+            dockerfile: ./Dockerfile
+            args:
+                USER_ID: "$USER_ID"
+                GROUP_ID: "$GROUP_ID"
+        environment:
+            TZ: 'Europe/Moscow'
+            PGTZ: 'Europe/Moscow'
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            PGDATA: "/var/lib/postgresql/data/pgdata_database_test"
+        volumes:
+            - ./data/postgres:/var/lib/postgresql/data_test
+            - ./logs/postgres:/var/log/postgresql/test/
+        ports:
+            - "5434:5432"
+        restart: unless-stopped
+        expose:
+            - "5434"
