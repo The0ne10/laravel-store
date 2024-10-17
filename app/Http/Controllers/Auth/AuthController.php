@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\ForgotPasswordFormRequest;
+use App\Http\Requests\Auth\ResetPasswordFormRequest;
 use App\Http\Requests\Auth\SignInFormRequest;
 use App\Http\Requests\Auth\SignUpFormRequest;
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
@@ -24,6 +27,47 @@ class AuthController extends Controller
     public function signUp()
     {
         return view('auth.sign-up');
+    }
+
+    public function forgot()
+    {
+        return view('auth.forgot-password');
+    }
+
+    public function forgotPassword(ForgotPasswordFormRequest $request)
+    {
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
+
+        return $status === Password::RESET_LINK_SENT
+            ? back()->with(['status' => __($status)])
+            : back()->withErrors(['email' => __($status)]);
+    }
+
+    public function reset(string $token)
+    {
+        return view('auth.reset-password', ['token' => $token]);
+    }
+
+    public function resetPassword(ResetPasswordFormRequest $request)
+    {
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => bcrypt($password)
+                ])->setRememberToken(str()->random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
+        return $status === Password::PASSWORD_RESET
+                    ? redirect()->route('login')->with('message', __($status))
+                    : back()->withErrors(['email' => [__($status)]]);
     }
 
     public function register(SignUpFormRequest $request)

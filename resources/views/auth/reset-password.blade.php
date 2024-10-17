@@ -5,17 +5,19 @@
 @section('content')
     <x-forms.auth-forms
         title="Востановление пароля"
-        action=""
+        action="{{ route('password.update') }}"
         method="POST"
     >
         @csrf
 
+        <input type="hidden" name="token" value="{{ $token }}" />
         <x-forms.text-input
             name="email"
             type="email"
             placeholder="E-mail"
             required="true"
             :is-error="$errors->has('email')"
+            value="{{ request('email') }}"
         />
         @error('email')
         <x-forms.error>
