@@ -7,7 +7,7 @@ use App\Http\Requests\Auth\ForgotPasswordFormRequest;
 use App\Http\Requests\Auth\ResetPasswordFormRequest;
 use App\Http\Requests\Auth\SignInFormRequest;
 use App\Http\Requests\Auth\SignUpFormRequest;
-use App\Models\User;
+use Domain\Auth\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;

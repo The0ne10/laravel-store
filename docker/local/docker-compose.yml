@@ -101,15 +101,15 @@ services:
         environment:
             TZ: 'Europe/Moscow'
             PGTZ: 'Europe/Moscow'
-            POSTGRES_DB: ${DB_DATABASE}
-            POSTGRES_USER: ${DB_USER}
-            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_DATABASE}_test
+            POSTGRES_USER: ${DB_USER}_test
+            POSTGRES_PASSWORD: ${DB_PASSWORD}_test
             PGDATA: "/var/lib/postgresql/data/pgdata_database_test"
         volumes:
-            - ./data/postgres:/var/lib/postgresql/data_test
-            - ./logs/postgres:/var/log/postgresql/test/
+            - ./data/postgres_test:/var/lib/postgresql/data_test
+            - ./logs/postgres_test:/var/log/postgresql/test/
         ports:
-            - "5434:5432"
+            - "5433:5432"
         restart: unless-stopped
         expose:
-            - "5434"
+            - "5433"
