@@ -4,9 +4,7 @@ namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Brand>
- */
+
 class BrandFactory extends Factory
 {
     /**
@@ -19,6 +17,8 @@ class BrandFactory extends Factory
         return [
             'title' => $this->faker->company(),
             'thumbnail' => '',
+            'on_home_page' => $this->faker->boolean(),
+            'sorting' => $this->faker->numberBetween(1, 999),
 //            'thumbnail' => $this->faker->imageCustomFaker('Brands'),
         ];
     }

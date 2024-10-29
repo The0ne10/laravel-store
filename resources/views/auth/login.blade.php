@@ -5,7 +5,7 @@
 @section('content')
     <x-forms.auth-forms
         title="Вход в аккаунт"
-        action="{{ route('login') }}"
+        action="{{ route('login.handle') }}"
         method="POST"
     >
         @csrf
@@ -51,7 +51,7 @@
 
         <x-slot:buttons>
             <div class="space-y-3 mt-5">
-                <div class="text-xxs md:text-xs"><a href="{{ route('forgot.handle') }}"
+                <div class="text-xxs md:text-xs"><a href="{{ route('forgot') }}"
                                                     class="text-white hover:text-white/70 font-bold">Забыли пароль?</a>
                 </div>
                 <div class="text-xxs md:text-xs"><a href="{{ route('register') }}"

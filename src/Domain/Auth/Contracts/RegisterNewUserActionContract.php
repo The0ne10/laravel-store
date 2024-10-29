@@ -2,7 +2,7 @@
 
 namespace Domain\Auth\Contracts;
 
-class RegisterNewUserActionContract
+interface RegisterNewUserActionContract
 {
-
+    public function __invoke(string $name, string $email, string $password);
 }

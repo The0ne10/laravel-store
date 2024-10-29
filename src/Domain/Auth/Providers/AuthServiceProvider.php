@@ -2,16 +2,16 @@
 
 namespace Domain\Auth\Providers;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
-class AuthServiceProvired extends ServiceProvider
+class AuthServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
      */
     public function register(): void
     {
-        //
+        $this->app->register(ActionServiceProvider::class);
     }
 
     /**
@@ -19,6 +19,6 @@ class AuthServiceProvired extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
     }
 }

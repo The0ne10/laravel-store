@@ -3,27 +3,38 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\ForgotPasswordFormRequest;
+use App\Http\Requests\Auth\ResetPasswordFormRequest;
+use Domain\Auth\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Facades\Password;
 
-class ForgotPasswordController extends Controller
+class ResetPasswordController extends Controller
 {
-    public function page()
+    public function page(string $token)
     {
-        return view('auth.forgot-password');
+        return view('auth.reset-password', ['token' => $token]);
     }
 
-    public function handle(ForgotPasswordFormRequest $request)
+    public function handle(ResetPasswordFormRequest $request)
     {
-        $status = Password::sendResetLink(
-            $request->only('email')
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function (User $user, string $password) {
+                $user->forceFill([
+                    'password' => bcrypt($password)
+                ])->setRememberToken(str()->random(60));
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
         );
 
-        if($status === Password::RESET_LINK_SENT) {
+        if($status === Password::PASSWORD_RESET) {
             flash()->info(__($status));
             return back();
         }
 
-        return back()->withErrors(['email' => __($status)]);
+        return redirect()->route('login')->with('message', __($status));
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services\Telegram;
+namespace Serivces\Telegram;
 
 use Illuminate\Support\Facades\Http;
 

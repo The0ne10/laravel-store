@@ -5,7 +5,7 @@
 @section('content')
     <x-forms.auth-forms
         title="Регистрация"
-        action="{{ route('register') }}"
+        action="{{ route('register.handle') }}"
         method="POST"
     >
         @csrf

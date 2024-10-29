@@ -2,9 +2,11 @@
 
 namespace Domain\Auth\Providers;
 
+use Domain\Auth\Actions\RegisterNewUserAction;
+use Domain\Auth\Contracts\RegisterNewUserActionContract;
 use Illuminate\Support\ServiceProvider;
 
-class AuthServiceProvider extends ServiceProvider
+class ActionServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -19,6 +21,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->app->bind(RegisterNewUserActionContract::class, RegisterNewUserAction::class);
     }
 }
