@@ -34,9 +34,9 @@ class Product extends Model
         return 'products';
     }
 
-    public function scopeHomePage(Builder $query): Builder
+    public function scopeHomePage(Builder $query): void
     {
-        return $query->where('on_home_page', true)
+        $query->where('on_home_page', true)
             ->orderBy('sorting')
             ->limit(6);
     }
