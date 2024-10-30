@@ -14,16 +14,14 @@ class HomeController extends Controller
             ->homePage()
             ->get();
 
-        $brand = Brand::query()
+        $brands = Brand::query()
             ->homePage()
             ->get();
 
-        $product = Product::query()
+        $products = Product::query()
             ->homePage()
             ->get();
 
-        return view('welcome');
-
-
+        return view('index', compact('categories', 'products', 'brands'));
     }
 }
