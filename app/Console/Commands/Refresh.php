@@ -5,7 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
-class refresh extends Command
+class Refresh extends Command
 {
     /**
      * The name and signature of the console command.
@@ -14,8 +14,8 @@ class refresh extends Command
      */
     protected $signature = 'shop:refresh';
     private array $deleteDirectory = [
-        'Brands',
-        'Products'
+        'brands',
+        'products'
     ];
 
     /**
@@ -30,8 +30,9 @@ class refresh extends Command
      */
     public function handle()
     {
+        $storage = Storage::disk('images');
         foreach ($this->deleteDirectory as $directory) {
-            Storage::deleteDirectory($directory);
+            $storage->deleteDirectory($directory);
         }
 
         $this->call('migrate:fresh', [

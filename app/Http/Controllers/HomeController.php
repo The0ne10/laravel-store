@@ -2,26 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Brand;
-use App\Models\Category;
 use App\Models\Product;
+use Domain\Catalog\ViewModels\BrandViewModel;
+use Domain\Catalog\ViewModels\CategoryViewModel;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 
 class HomeController extends Controller
 {
-    public function __invoke()
+    public function __invoke(): View|Factory|Application
     {
-        $categories = Category::query()
-            ->homePage()
-            ->get();
+        $categories = CategoryViewModel::make()->homePage();
 
-        $brands = Brand::query()
-            ->homePage()
-            ->get();
+        $brands = BrandViewModel::make()->homePage();
 
         $products = Product::query()
             ->homePage()
             ->get();
 
-        return view('index', compact('categories', 'products', 'brands'));
+
+        return view('index', compact(
+            'categories',
+            'products',
+            'brands'));
     }
 }
