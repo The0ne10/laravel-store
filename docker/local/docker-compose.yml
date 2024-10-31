@@ -62,7 +62,6 @@ services:
             APP_ENV: ${APP_ENV}
             PROJECT_PREFIX: "$PROJECT_PREFIX"
             DB_CONNECTION: "pgsql"
-            DB_HOST: ${DB_HOST}
             DB_DATABASE: ${DB_DATABASE}
             DB_USERNAME: ${DB_USER}
             DB_PASSWORD: ${DB_PASSWORD}
@@ -83,36 +82,21 @@ services:
             POSTGRES_DB: ${DB_DATABASE}
             POSTGRES_USER: ${DB_USER}
             POSTGRES_PASSWORD: ${DB_PASSWORD}
-            PGDATA: "/var/lib/postgresql/data/pgdata_grena"
+            PGDATA: "/var/lib/postgresql/data/${PROJECT_PREFIX}"
         volumes:
             - ./data/postgres:/var/lib/postgresql/data
             - ./logs/postgres:/var/log/postgresql/
         ports:
             - "5432:5432"
         restart: unless-stopped
-        expose:
-            - "5432"
 
     postgres_test:
         container_name: ${PROJECT_PREFIX}_postgres_test
-        build:
-            context: ./containers/postgres
-            dockerfile: ./Dockerfile
-            args:
-                USER_ID: "$USER_ID"
-                GROUP_ID: "$GROUP_ID"
+        image: postgres:14.5
         environment:
-            TZ: 'Europe/Moscow'
-            PGTZ: 'Europe/Moscow'
-            POSTGRES_DB: ${DB_DATABASE}_test
-            POSTGRES_USER: ${DB_USER}_test
-            POSTGRES_PASSWORD: ${DB_PASSWORD}_test
-            PGDATA: "/var/lib/postgresql/data/pgdata_database_test"
-        volumes:
-            - ./data/postgres_test:/var/lib/postgresql/data_test
-            - ./logs/postgres_test:/var/log/postgresql/test/
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
         ports:
             - "5433:5432"
         restart: unless-stopped
-        expose:
-            - "5433"
