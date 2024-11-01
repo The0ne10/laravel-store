@@ -30,6 +30,7 @@ class Product extends Model
         'thumbnail',
         'on_home_page',
         'sorting',
+        'text',
     ];
 
     protected $casts = [
@@ -39,6 +40,31 @@ class Product extends Model
     protected function thumbnailDir(): string
     {
         return 'products';
+    }
+
+    public function scopeFiltered(Builder $query)
+    {
+        $query->when(request('filters.brands'), function (Builder $query) {
+            $query->whereIn('brand_id', request('filters.brands'));
+        })->when(request('filters.price'), function (Builder $query) {
+            $query->whereBetween('price', [
+                request('filters.price.from', 0) * 100,
+                request('filters.price.to', 100000) * 100,
+            ]);
+        });
+    }
+
+    public function scopeSorted(Builder $query)
+    {
+        $query->when(request('sort'), function (Builder $query) {
+            $column = request()->str('sort');
+
+            if ($column->contains(['price', 'title'])) {
+                $direction = $column->contains('-') ? 'desc' : 'asc';
+
+                $query->orderBy((string) $column->remove('-'), $direction);
+            }
+        });
     }
 
     public function scopeHomePage(Builder $query): void

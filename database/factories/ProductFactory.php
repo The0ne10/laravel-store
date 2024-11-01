@@ -16,9 +16,10 @@ class ProductFactory extends Factory
             'brand_id' => Brand::query()->inRandomOrder()->value('id'),
             'thumbnail' => $this->faker->imageCustomFaker(base_path('resources/images/products'), 'images/products'),
 //            'thumbnail' => $this->faker->imageCustomFaker('images/products'),
-            'price' => $this->faker->numberBetween(1000, 100000),
+            'price' => $this->faker->numberBetween(1000, 1000000),
             'on_home_page' => $this->faker->boolean(),
             'sorting' => $this->faker->numberBetween(1, 999),
+            'text' => $this->faker->realText(),
         ];
     }
 }

@@ -35,6 +35,7 @@ class Refresh extends Command
             $storage->deleteDirectory($directory);
         }
 
+        $this->call('cache:clear');
         $this->call('migrate:fresh', [
             '--seed' => true,
         ]);
