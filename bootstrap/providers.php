@@ -6,4 +6,5 @@ return [
     App\Providers\DomainServiceProvider::class,
     App\Providers\TelescopeServiceProvider::class,
     App\Providers\ViewServiceProvider::class,
+    App\Providers\CatalogServiceProvider::class,
 ];
