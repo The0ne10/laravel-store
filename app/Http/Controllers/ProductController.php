@@ -6,9 +6,18 @@ use App\Models\Product;
 
 class ProductController extends Controller
 {
-    public function __invoke(Product $product)
+    public function __invoke(Product $product, ?array $also = [])
     {
         $product->load(['OptionValues.option']);
+
+        if (session()->has('also')) {
+            $also = Product::query()
+                ->where(function ($query) use ($product) {
+                    $query->whereIn('id', session('also'))
+                        ->where('id', '!=', $product->id);
+                })->get();
+        }
+
 
         $options = $product->optionValues->mapToGroups(function ($item) {
             return [$item->option->title => $item];
@@ -20,6 +29,7 @@ class ProductController extends Controller
         return view('product.show', [
             'product' => $product,
             'options' => $options,
+            'also' => $also,
         ]);
     }
 }

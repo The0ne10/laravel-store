@@ -1,7 +1,8 @@
 <?php
 
-it('returns a successful response', function () {
-    $response = $this->get('/');
+use App\Http\Controllers\HomeController;
 
-    $response->assertStatus(200);
+it('returns a successful response', function () {
+    $this->get(action(HomeController::class))
+        ->assertOk();
 });
