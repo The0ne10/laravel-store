@@ -1,22 +1,25 @@
 <?php
 
-namespace App\Models;
+namespace Domain\Product\Models;
 
+use App\Jobs\ProductJsonProperties;
 use Domain\Catalog\Models\Brand;
 use Domain\Catalog\Models\Category;
+use Domain\Product\Collections\OptionValueCollection;
+use Domain\Product\QueryBuilders\ProductQueryBuilder;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Collection;
 use Support\Casts\PriceCast;
 use Support\Traits\Traits\Models\HasSlug;
 use Support\Traits\Traits\Models\HasThumbnail;
 
 /**
- * @method static Builder|Category query()
- * @method Builder|Category homePage()
+ * @method static ProductQueryBuilder|Product query()
+ * @method static ProductQueryBuilder|Product homePage()
  */
 class Product extends Model
 {
@@ -32,10 +35,12 @@ class Product extends Model
         'on_home_page',
         'sorting',
         'text',
+        'json_properties'
     ];
 
     protected $casts = [
         'price' => PriceCast::class,
+        'json_properties' => 'array',
     ];
 
     protected function thumbnailDir(): string
@@ -43,24 +48,19 @@ class Product extends Model
         return 'products';
     }
 
-    public function scopeFiltered(Builder $query)
+    public static function boot(): void
     {
-        return app(Pipeline::class)
-            ->send($query)
-            ->through(filters())
-            ->thenReturn();
+        parent::boot();
+
+        self::created(function (Product $product) {
+            ProductJsonProperties::dispatch($product)
+                ->delay(now()->addSeconds(10));
+        });
     }
 
-    public function scopeSorted(Builder $query)
+    public function newEloquentBuilder($query): ProductQueryBuilder
     {
-        sorter()->run($query);
-    }
-
-    public function scopeHomePage(Builder $query): void
-    {
-        $query->where('on_home_page', true)
-            ->orderBy('sorting')
-            ->limit(6);
+        return new ProductQueryBuilder($query);
     }
 
     public function brand(): BelongsTo

@@ -2,10 +2,10 @@
 
 namespace Domain\Catalog\Models;
 
-use App\Models\Product;
 use Domain\Catalog\Collections\CategoryCollection;
 use Domain\Catalog\Observers\CategoryObserver;
 use Domain\Catalog\QueryBuilders\CategoryQueryBuilder;
+use Domain\Product\Models\Product;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,7 +17,7 @@ use Support\Traits\Traits\Models\HasThumbnail;
 
 /**
  * @method static CategoryQueryBuilder|Category query()
- * @method Builder|Category homePage()
+ * @method CategoryQueryBuilder|Category homePage()
  */
 
 #[ObservedBy([CategoryObserver::class])]

@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\HomeController;
 
-it('returns a successful response', function () {
+it('successful response home page', function () {
     $this->get(action(HomeController::class))
         ->assertOk();
 });

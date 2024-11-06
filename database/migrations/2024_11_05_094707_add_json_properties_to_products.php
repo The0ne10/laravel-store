@@ -9,7 +9,6 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('products', function (Blueprint $table) {
-            // TODO:
             $table->json('json_properties')
                 ->nullable();
         });

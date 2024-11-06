@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
+use Domain\Product\Models\Product;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Foundation\Application;
 
 class ProductController extends Controller
 {
-    public function __invoke(Product $product, ?array $also = [])
+    public function __invoke(Product $product, ?array $also = []): View|Factory|Application
     {
         $product->load(['OptionValues.option']);
 
@@ -18,17 +21,12 @@ class ProductController extends Controller
                 })->get();
         }
 
-
-        $options = $product->optionValues->mapToGroups(function ($item) {
-            return [$item->option->title => $item];
-        });
-
         // Функционал просмотренных товаров храниться в сессиях
         session()->put('also.' . $product->id, $product->id);
 
         return view('product.show', [
             'product' => $product,
-            'options' => $options,
+            'options' => $product->optionValues->keyValues(),
             'also' => $also,
         ]);
     }
