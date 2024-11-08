@@ -15,6 +15,10 @@ class DomainServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->register(
+            \Domain\Cart\Providers\CartServiceProvider::class
+        );
+
+        $this->app->register(
             AuthServiceProvider::class
         );
 

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use PhpOption\Some;
 
 class RouteServiceProvider extends ServiceProvider
 {

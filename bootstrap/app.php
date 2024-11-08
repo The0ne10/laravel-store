@@ -19,6 +19,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
             Route::middleware('web')
                 ->group(base_path('routes/product.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/cart.php'));
         },
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
