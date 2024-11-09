@@ -27,14 +27,23 @@ final class CartManager
                 'storage_id' => $this->identityStorage->get(),
             ], $this->storedData($this->identityStorage->get()));
 
-        $cartItem = $cart->cartItems()->updateOrCreate([
+        $cartItem = $cart->cartItems()->where([
             'product_id' => $product->getKey(),
             'string_option_values' => $this->stringedOptionValues($optionValues),
-        ], [
-            'price' => $product->price,
-            'quantity' => DB::raw('quantity + ' . $quantity),
-            'string_option_values' => $this->stringedOptionValues($optionValues),
-        ]);
+        ])->first();
+
+        if (!$cartItem) {
+            $cartItem = $cart->cartItems()->create([
+                'product_id' => $product->getKey(),
+                'string_option_values' => $this->stringedOptionValues($optionValues),
+                'price' => $product->price,
+                'quantity' => $quantity,
+            ]);
+        } else {
+            $cartItem->update([
+                'quantity' => $cartItem->quantity + $quantity,
+            ]);
+        }
 
         $cartItem->optionValues()->sync($optionValues);
 
@@ -86,7 +95,8 @@ final class CartManager
 
         return CartItem::query()
             ->with(['product', 'optionValues.option'])
-            ->whereBelongsTo($this->get());
+            ->whereBelongsTo($this->get())
+            ->get();
     }
 
     public function count(): int

@@ -40,12 +40,14 @@
                                         <img src="{{ $item->product->makeThumbnail('345x320') }}" class="object-cover w-full h-full" alt="{{ $item->product->title }}">
                                     </div>
                                     <div class="py-3">
-                                        <h4 class="text-xs sm:text-sm xl:text-md font-bold"><a href="product.html" class="inline-block text-white hover:text-pink">{{ $item->product->title }}</a></h4>
+                                        <h4 class="text-xs sm:text-sm xl:text-md font-bold">
+                                        <a href="{{ route('product', $item->product) }}" class="inline-block text-white hover:text-pink">{{ $item->product->title }}</a>
+                                        </h4>
 
                                         @if($item->optionValues->isNotEmpty())
                                             <ul class="space-y-1 mt-2 text-xs">
                                                 @foreach($item->optionValues as $value)
-                                                    <li class="text-body">{{ $value->option->title }}: {{ $value->item }}</li>
+                                                    <li class="text-body">{{ $value->option->title }}: {{ $value->title }}</li>
                                                 @endforeach
                                             </ul>
                                         @endif

@@ -45,6 +45,14 @@ ADD ./conf/docker-php-ext-xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xd
 RUN sed -i -e "s/www-data:x:82:82:Linux User,,,:\/home\/www-data:\/sbin\/nologin/www-data:x:${USER_ID}:${GROUP_ID}:Linux User,,,:\/home\/www-data:\/bin\/bash/g" /etc/passwd \
     && sed -i -e "s/www-data:x:82:www-data/www-data:x:${GROUP_ID}:www-data/g" /etc/group
 
+# Создайние файла .bashrc и добававление в него алиасы
+RUN echo "alias ll='ls -la'" >> /home/www-data/.bashrc && \
+    echo "alias l='ls -l'" >> /home/www-data/.bashrc && \
+    echo "alias test='php artisan test --env=testing'" >> /home/www-data/.bashrc && \
+    echo "alias a='php artisan'" >> /home/www-data/.bashrc
+
+RUN /bin/bash -c "source /home/www-data/.bashrc"
+
 # Установка Composer
 RUN cd /bin && curl --silent --show-error https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
