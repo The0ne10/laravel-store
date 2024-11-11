@@ -5,6 +5,7 @@ namespace Domain\Cart;
 use Domain\Cart\Contracts\CartIdentityStorageContract;
 use Domain\Cart\Models\Cart;
 use Domain\Cart\Models\CartItem;
+use Domain\Cart\StorageIdentities\FakeSessionIdentityStorage;
 use Domain\Product\Models\Product;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -17,8 +18,7 @@ final class CartManager
     public function __construct(
         protected CartIdentityStorageContract $identityStorage
     )
-    {
-    }
+    {}
 
     public function add(Product $product, int $quantity = 1, array $optionValues = []): Cart|Builder
     {
@@ -52,11 +52,25 @@ final class CartManager
         return $cart;
     }
 
+    public function updateStorageId(string $old, string $current): void
+    {
+        Cart::query()
+            ->where('storage_id', $old)
+            ->update($this->storedData($current));
+    }
+
+    public static function fake(): void
+    {
+        app()->bind(CartIdentityStorageContract::class, FakeSessionIdentityStorage::class);
+    }
+
     public function quantity(CartItem $item, int $quantity = 1): void
     {
         $item->update([
             'quantity' => $quantity
         ]);
+
+        $this->forgetCache();
     }
 
     public function delete(CartItem $item): void
@@ -68,7 +82,9 @@ final class CartManager
 
     public function truncate(): void
     {
-        $this->get()?->delete();
+        if ($this->get()) {
+            $this->get()->delete();
+        }
 
         $this->forgetCache();
     }
@@ -90,7 +106,7 @@ final class CartManager
     public function items(): Collection
     {
         if(!$this->get()) {
-            return collect([]);
+            return collect();
         }
 
         return CartItem::query()
@@ -117,7 +133,10 @@ final class CartManager
 
     public function cartItems(): Collection
     {
-        return $this->get()?->cartItems ?? collect([]);
+        if(!$this->get()) {
+            return collect();
+        }
+        return $this->get()->cartItems;
     }
 
     private function stringedOptionValues(array $optionValues = []): string

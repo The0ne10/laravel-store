@@ -5,9 +5,6 @@ RUN mkdir -p /var/run/mysqld
 RUN mkdir -p /run/php
 
 # Аргументы и переменные окружения
-ARG APP_ENV='prod'
-ENV APP_ENV=${APP_ENV}
-
 ARG USER_ID='1000'
 ENV USER_ID=${USER_ID}
 
