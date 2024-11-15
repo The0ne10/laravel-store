@@ -22,6 +22,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
             Route::middleware('web')
                 ->group(base_path('routes/cart.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/order.php'));
         },
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
@@ -31,6 +34,12 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->renderable(function (DomainException $e) {
+            flash()->alert($e->getMessage());
+
+            return session()->previousUrl()
+                ? back()
+                : redirect()->route('home');
+        });
     })
     ->create();
