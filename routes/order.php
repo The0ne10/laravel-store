@@ -1,8 +1,6 @@
 <?php
 
-use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\OrderController;
-use App\Http\Middleware\CatalogViewMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::controller(OrderController::class)->prefix('order')->group(function () {

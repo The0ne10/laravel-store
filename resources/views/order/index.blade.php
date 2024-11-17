@@ -142,7 +142,7 @@
                                     <div class="form-radio">
                                         <input
                                             type="radio"
-                                            name="delivery-type_id"
+                                            name="delivery_type_id"
                                             id="delivery-method-address-{{ $delivery->id }}"
                                             value="{{ $delivery->id }}"
                                             @checked($loop->first || old('delivery_id') === $delivery->id)
