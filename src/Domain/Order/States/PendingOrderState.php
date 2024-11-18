@@ -16,7 +16,7 @@ class PendingOrderState extends OrderState
 
     public function value(): string
     {
-        return 'panding';
+        return 'pending';
     }
 
     public function humanValue(): string

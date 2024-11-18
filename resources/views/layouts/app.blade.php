@@ -13,9 +13,10 @@
     @vite(['resources/css/app.css', 'resources/sass/main.sass', 'resources/js/app.js'])
 </head>
 <body class="antialiased">
-    @include('shared.flash')
 
     @include('shared.header')
+    @include('shared.flash')
+
     <main class="py-16 lg:py-20">
         <div class="container">
             @yield('content')

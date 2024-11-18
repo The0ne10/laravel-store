@@ -18,6 +18,7 @@ class ProductFactory extends Factory
 //            'thumbnail' => $this->faker->imageCustomFaker('images/products'),
             'price' => $this->faker->numberBetween(1000, 1000000),
             'on_home_page' => $this->faker->boolean(),
+            'quantity' => $this->faker->numberBetween(0, 20),
             'sorting' => $this->faker->numberBetween(1, 999),
             'text' => $this->faker->realText(),
         ];

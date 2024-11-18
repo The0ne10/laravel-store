@@ -10,8 +10,7 @@ class Flash
     public const MESSAGE_KEY = 'shop_flash_message';
     public const MESSAGE_CLASS_KEY = 'shop_flash_class';
     public function __construct(protected Session $session)
-    {
-    }
+    {}
 
 
     public function get(): ?FlashMessage
@@ -20,10 +19,9 @@ class Flash
         if (!$message) {
             return null;
         }
-
         return new FlashMessage(
             $message,
-            $this->session->get(self::MESSAGE_KEY)
+            $this->session->get(self::MESSAGE_CLASS_KEY)
         );
     }
 
